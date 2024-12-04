@@ -1,9 +1,6 @@
 package Main;
 
-import entities.Animal;
-import entities.AnimalType;
-import entities.Island;
-import entities.Location;
+import entities.*;
 import factory.AnimalFactory;
 import simulation.Statistics;
 
@@ -13,12 +10,13 @@ import java.util.concurrent.Executors;
 public class App {
 
     public static void main(String[] args) {
-        Island island = new Island(100, 100);
+        Island island = new Island(10, 10);
         ExecutorService executor = Executors.newFixedThreadPool(10);
 
         // Добавление животных на остров
         Location location = island.getLocation(0, 0);
         location.addAnimal(AnimalFactory.createAnimal(AnimalType.WOLF));
+        location.addAnimal(AnimalFactory.createAnimal(AnimalType.BEAR));
         location.addAnimal(AnimalFactory.createAnimal(AnimalType.RABBIT));
         location.addAnimal(AnimalFactory.createAnimal(AnimalType.DEER));
         location.addAnimal(AnimalFactory.createAnimal(AnimalType.HORSE));
@@ -64,7 +62,26 @@ public class App {
             while (true) {
                 location.growPlants();
                 try {
-                    Thread.sleep(1000); // Рост растений каждые 1 секунду
+                    Thread.sleep(10000); // Рост растений каждые 10 секунду
+                } catch (InterruptedException e) {
+                    Thread.currentThread().interrupt();
+                }
+            }
+        });
+        // Симуляция поедания растений животными
+        executor.submit(() -> {
+            while (true) {
+                // Процесс поедания пищи животными
+                for (Location location1 : island.getLocations()) {
+                    for (Animal animal : location1.getAnimals()) {
+                        if (animal instanceof Herbivore) {  // Только для травоядных животных
+                            animal.eat(location1);  // Животное поедает растения
+                        }
+                    }
+                }
+
+                try {
+                    Thread.sleep(1000); // Поедание растений каждую секунду
                 } catch (InterruptedException e) {
                     Thread.currentThread().interrupt();
                 }

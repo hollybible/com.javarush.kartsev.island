@@ -1,6 +1,9 @@
 package entities;
 
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class Island {
     private final Location[][] locations;
     private final int width;
@@ -27,6 +30,17 @@ public class Island {
 
     public int getHeight() {
         return height;
+    }
+
+    // Метод для получения всех локаций на острове
+    public List<Location> getLocations() {
+        List<Location> locationList = new ArrayList<>();
+        for (int i = 0; i < width; i++) {
+            for (int j = 0; j < height; j++) {
+                locationList.add(locations[i][j]);
+            }
+        }
+        return locationList;
     }
 }
 

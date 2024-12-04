@@ -7,7 +7,7 @@ import java.util.concurrent.CopyOnWriteArrayList;
 
 public class Location {
     private final List<Animal> animals = new CopyOnWriteArrayList<>();
-    private double plants = 5.0;
+    private double plants = 1.0;
 
     public void addAnimal(Animal animal) {
         if (animals.size() < animal.getType().getMaxOnCell()) {
@@ -28,7 +28,7 @@ public class Location {
     }
 
     public void growPlants() {
-        plants += Math.random() * 10;
+        plants += Math.random() * 5;
     }
 
     public void consumePlants(double amount) {

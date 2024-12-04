@@ -1,26 +1,17 @@
 package entities;
 
-public class Plant {
-//    private double weight; // Текущий вес растения
+//public class Plant {
+//    private double growthRate;
 //
-//    public Plant(double initialWeight) {
-//        this.weight = initialWeight;
+//    public Plant() {
+//        this.growthRate = Math.random() * 10; // Условный рост
 //    }
 //
-//    public double getWeight() {
-//        return weight;
+//    public double getGrowthRate() {
+//        return growthRate;
 //    }
 //
 //    public void grow() {
-//        // Растение растёт (увеличиваем вес)
-//        this.weight += 1.0; // Растёт на 1 кг за такт, можно изменить
+//        growthRate += Math.random() * 5; // Дополнительный рост
 //    }
-//
-//    public void beEaten(double amount) {
-//        // Уменьшаем вес растения, когда его едят
-//        this.weight -= amount;
-//        if (this.weight < 0) {
-//            this.weight = 0; // Вес растения не может быть отрицательным
-//        }
-//    }
-}
+//}
