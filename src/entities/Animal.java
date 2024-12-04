@@ -1,72 +1,47 @@
 package entities;
 
-import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.List;
 
 public abstract class Animal {
-    protected double weight;                          //вес
-    protected int maxSpeed;                           //(Макс кол-во клеток за раз)
-    protected double maxSatiety;                      // максимальная сытость
-    protected double actualSatiety;                   //(Фактическая сытость)
-    protected Location location;                    // Локация животного на острове
-    protected AtomicBoolean isAlive;                // Состояние животного (живое или мертвое)
+    protected final AnimalType type;
+    protected double weight;
+    protected double hunger; // Уровень голода
 
-    public Animal(double weight, int maxSpeed, double maxSatiety, double actualSatiety, Location location) {
-        this.weight = weight;
-        this.maxSpeed = maxSpeed;
-        this.maxSatiety = maxSatiety;
-        this.actualSatiety = actualSatiety;
-        this.location = location;
-        this.isAlive = new AtomicBoolean(true);
+    public Animal(AnimalType type) {
+        this.type = type;
+        this.weight = type.getWeight();
+        this.hunger = 0;  // Изначально голодное животное
     }
 
-    public abstract void eat();                        //args-plant or animal? if there are food in the location
-
-    public abstract void move();                      // put the location
-
-
-    public abstract void eat(Object food);
-
-    public abstract void reproduce();                 // if we have pair in the location
-
-
-    public abstract void die();                   //if the animal is too hungry or be eaten (be deleted with garbageCollector)
-
-
-    // Метод для увеличения сытости
-    protected void updateSatiety(double amount) {
-        actualSatiety = Math.min(actualSatiety + amount, maxSatiety);
-    }
-
-    // Метод для уменьшения сытости
-    protected void decreaseSatiety(double amount) {
-        actualSatiety = Math.max(actualSatiety - amount, 0);
-    }
-
-    // Метод для проверки состояния животного (живо ли оно)
-    public boolean isAlive() {
-        return isAlive.get();
-    }
-
-    public void kill() {
-        isAlive.set(false);
-        die();
-    }
-
-    public double getActualSatiety() {
-        return actualSatiety;
+    public AnimalType getType() {
+        return type;
     }
 
     public double getWeight() {
         return weight;
     }
 
-    public Location getLocation() {
-        return location;
+    public double getHunger() {
+        return hunger;
     }
 
-    public void setLocation(Location location) {
-        this.location = location;
+    public void increaseHunger(double amount) {
+        hunger += amount;
     }
+
+    public void decreaseHunger(double amount) {
+        hunger = Math.max(0, hunger - amount);
+    }
+
+    public abstract void eat(Location location);
+
+    public abstract void move(Island island);
+
+    public abstract void reproduce(Location location);
+
+    public abstract void die();
+
+    public abstract void checkIfStarved();
 }
 
 

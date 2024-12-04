@@ -1,23 +1,18 @@
 package entities;
 
-import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 public class Location {
-    private int x;                          // Координата X
-    private int y;                          // Координата Y
-    private List<Animal> animals;           // Список животных в клетке
-    private List<Plant> plants;             // Список растений в клетке
-
-    public Location(int x, int y) {
-        this.x = x;
-        this.y = y;
-        this.animals = new ArrayList<>();
-        this.plants = new ArrayList<>();
-    }
+    private final List<Animal> animals = new CopyOnWriteArrayList<>();
+    private double plants = 5.0;
 
     public void addAnimal(Animal animal) {
-        animals.add(animal);
+        if (animals.size() < animal.getType().getMaxOnCell()) {
+            animals.add(animal);
+        }
     }
 
     public void removeAnimal(Animal animal) {
@@ -28,26 +23,29 @@ public class Location {
         return animals;
     }
 
-    public void addPlant(Plant plant) {
-        plants.add(plant);
-    }
-
-    public List<Plant> getPlants() {
+    public double getPlants() {
         return plants;
     }
 
-    public void displayLocation() {
-        System.out.print("[");
-        if (animals.isEmpty()) {
-            System.out.print("  ");
-        } else {
-            System.out.print(animals.size() + "A");
+    public void growPlants() {
+        plants += Math.random() * 10;
+    }
+
+    public void consumePlants(double amount) {
+        plants = Math.max(0, plants - amount);
+    }
+
+    public synchronized Map<String, Integer> getPopulationStatistics() {
+        Map<String, Integer> statistics = new ConcurrentHashMap<>();
+
+        // Подсчёт животных по типам
+        for (Animal animal : animals) {
+            statistics.merge(animal.getType().name(), 1, Integer::sum);
         }
-        if (plants.isEmpty()) {
-            System.out.print("  ");
-        } else {
-            System.out.print(plants.size() + "P");
-        }
-        System.out.print("] ");
+
+        // Добавляем количество растений
+        statistics.put("Plants", (int) plants);
+
+        return statistics;
     }
 }
